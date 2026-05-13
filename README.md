@@ -24,3 +24,35 @@ En un mundo donde la calidad del aire interior es crítica, este dispositivo ofr
 | **Interfaz** | Visual (LEDs 0402) + Sonora (Buzzer) |
 
 ---
+## Arquitectura del Sistema
+A continuación se presenta el diagrama de bloques del nodo de monitoreo:
+
+```mermaid
+graph LR
+    subgraph Sensores
+        SGP40[Sensor SGP40 VOC]
+    end
+
+    subgraph Procesamiento
+        ESP32[ESP32-C6 <br/>Microcontrolador]
+    end
+
+    subgraph Interfaz
+        LEDs[LEDs Estado 0402]
+        Buzzer[Buzzer Magnético]
+    end
+
+    subgraph Potencia
+        LIPO[Batería Li-Po]
+        CHG[Cargador MCP73831]
+        REG[Regulador AP2112]
+    end
+
+    SGP40 -- I2C --> ESP32
+    ESP32 --> LEDs
+    ESP32 --> Buzzer
+    LIPO --> CHG
+    CHG --> REG
+    REG -- 3.3V --> ESP32
+    REG -- 3.3V --> SGP40
+    
